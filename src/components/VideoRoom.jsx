@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 
-function VideoRoom({ roomId, userId }) {
+function VideoRoom({ roomId, userId, peerConnection }) {
   const [peers, setPeers] = useState({});
   const [connected, setConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -48,6 +48,21 @@ function VideoRoom({ roomId, userId }) {
       cleanupResources();
     };
   }, [roomId, userId]);
+
+  useEffect(() => {
+    if (peerConnection) {
+      const handleConnectionStateChange = () => {
+        console.log('Peer connection state:', peerConnection.connectionState);
+        // Optionally, update UI based on connection state
+      };
+
+      peerConnection.addEventListener('connectionstatechange', handleConnectionStateChange);
+
+      return () => {
+        peerConnection.removeEventListener('connectionstatechange', handleConnectionStateChange);
+      };
+    }
+  }, [peerConnection]);
 
   const setupSocketListeners = () => {
     // Handle existing users in the room
