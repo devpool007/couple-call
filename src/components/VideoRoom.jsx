@@ -14,7 +14,11 @@ function VideoRoom({ roomId, userId, peerConnection }) {
 
   useEffect(() => {
     // Connect to the signaling server
-    socketRef.current = io('http://localhost:3000');
+    socketRef.current = io('https://couple-call-backend.onrender.com', {
+        transports: ['websocket'],
+        reconnection: true,
+        secure: true
+    });
     
     // Get local media stream
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
