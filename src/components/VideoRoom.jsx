@@ -14,13 +14,13 @@ function VideoRoom({ roomId, userId, peerConnection }) {
 
   useEffect(() => {
     // Connect to the signaling server
-    // socketRef.current = io('https://couple-call-backend.onrender.com', {
+    // socketRef.current = io("http://localhost:3000", {
     //     transports: ['websocket'],
     //     reconnection: true,
     //     secure: true
     // });
 
-    socketRef.current = io("http://localhost:3000", {
+    socketRef.current = io('https://couple-call-backend.onrender.com', {
       transports: ["websocket"],
       reconnection: true,
       secure: true,
