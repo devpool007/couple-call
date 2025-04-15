@@ -49,7 +49,7 @@ function App() {
   };
 
   return (
-    <div className=" mx-auto text-center">
+    <div className="text-center">
       {!joined ? (
         <JoinRoom onJoin={handleJoinRoom} />
       ) : (

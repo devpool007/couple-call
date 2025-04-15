@@ -438,21 +438,21 @@ function VideoRoom({ roomId, userId, peerConnection }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 relative p-10">
+    <div className="min-h-screen bg-gray-900 relative p-6">
       {/* Status Bar */}
         <div className="bg-gray-800 bg-opacity-90 p-4 rounded-lg mb-4">
           <div className="flex justify-between items-center max-w-7xl mx-auto">
             <div>
-          <h2 className="text-white text-lg">Room: <span className="font-mono">{roomId}</span></h2>
+          <h2 className="text-white text-sm md:text-lg">Room: <span className="font-mono">{roomId}</span></h2>
           <p className={`text-sm ${connected ? 'text-green-400' : 'text-yellow-400'}`}>
             {connected ? `Connected as: ${userId.substring(0, 8)}...` : 'Connecting...'}
           </p>
             </div>
-            <div className="text-center text-white text-xl font-semibold">
+            <div className="text-center text-white text-sm md:text-xl font-semibold">
               Welcome to Couple Call ❤️
             </div>
             <div className="text-white text-sm">
-          <span className="bg-gray-700 px-3 py-1 rounded-full">
+          <span className="px-3 py-1 rounded-full">
             {Object.keys(peers).length + 1}/2 Participants
           </span>
             </div>
@@ -460,7 +460,7 @@ function VideoRoom({ roomId, userId, peerConnection }) {
         </div>
 
         {/* Video Grid */}
-        <div className="flex flex-col lg:flex-row gap-4 mb-6">
+        <div className="flex flex-col lg:flex-row gap-4 mb-10 mt-8">
           {/* Local Video */}
           <div className="w-full lg:w-1/2 h-auto ">
             <div className="relative w-full h-full rounded-xl overflow-hidden">
@@ -513,7 +513,7 @@ function VideoRoom({ roomId, userId, peerConnection }) {
         </div>
 
         {/* Controls - Now placed below videos */}
-      <div className="bg-gray-800 bg-opacity-90 p-4 rounded-lg">
+      <div className="bg-gray-800 bg-opacity-90 p-6 rounded-lg">
         <div className="flex items-center justify-center gap-4 max-w-xl mx-auto">
           <button
             onClick={toggleMute}
