@@ -49,12 +49,14 @@ function App() {
   };
 
   return (
-    <div className="text-center">
-      {!joined ? (
-        <JoinRoom onJoin={handleJoinRoom} />
-      ) : (
-        <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
-      )}
+    <div className="min-h-screen bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {!joined ? (
+          <JoinRoom onJoin={handleJoinRoom} />
+        ) : (
+          <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
+        )}
+      </div>
     </div>
   );
 }

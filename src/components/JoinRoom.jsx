@@ -12,25 +12,28 @@ function JoinRoom({ onJoin }) {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-50 p-6 rounded-lg shadow-md">
-      <form onSubmit={handleSubmit}>
-        <h2 className="text-xl font-semibold mb-4">Join a Video Call</h2>
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Enter room ID (or leave blank for random)"
-            value={roomId}
-            onChange={(e) => setRoomId(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-        <button 
-          type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
-        >
-          Join Room
-        </button>
-      </form>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 p-4">
+      <h1 className="text-4xl font-bold mb-8 text-white">Couple Call ❤️</h1>
+      <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-xl border border-gray-700">
+        <form onSubmit={handleSubmit}>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-200">Join a Video Call</h2>
+          <div className="mb-6">
+            <input
+              type="text"
+              placeholder="Enter room ID (or leave blank for random)"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
+          <button 
+            type="submit"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300 shadow-lg"
+          >
+            Join Room
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
