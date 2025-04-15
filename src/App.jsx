@@ -49,13 +49,14 @@ function App() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 text-center">
-      <h1 className="text-3xl font-bold mb-8">Simple Video Call App</h1>
-      {!joined ? (
-        <JoinRoom onJoin={handleJoinRoom} />
-      ) : (
-        <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
-      )}
+    <div className="min-h-screen bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {!joined ? (
+          <JoinRoom onJoin={handleJoinRoom} />
+        ) : (
+          <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
+        )}
+      </div>
     </div>
   );
 }
