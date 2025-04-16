@@ -1,5 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
+import StatusBar from "./StatusBar";
+import VideoGrid from "./VideoGrid";
+import Controls from "./Controls";
 
 function VideoRoom({ roomId, userId, peerConnection }) {
   const [peers, setPeers] = useState({});
@@ -20,7 +23,7 @@ function VideoRoom({ roomId, userId, peerConnection }) {
     //     secure: true
     // });
 
-    socketRef.current = io('https://couple-call-backend.onrender.com', {
+    socketRef.current = io("https://couple-call-backend.onrender.com", {
       transports: ["websocket"],
       reconnection: true,
       secure: true,
@@ -101,7 +104,7 @@ function VideoRoom({ roomId, userId, peerConnection }) {
     socketRef.current.on("reconnect_error", (error) => {
       console.log("Reconnection error:", error);
     });
-    
+
     // Handle existing users in the room
     socketRef.current.on("existing-users", (existingUsers) => {
       console.log("Existing users in room:", existingUsers);
@@ -412,135 +415,30 @@ function VideoRoom({ roomId, userId, peerConnection }) {
     );
   };
 
-  // Component to display a remote video
-  const RemoteVideo = ({ stream, peerId }) => {
-    const videoRef = useRef(null);
-
-    useEffect(() => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    }, [stream]);
-
-    return (
-      <div className="relative w-80 h-60 border-2 border-blue-500 rounded-lg overflow-hidden shadow-lg">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-          Peer: {peerId.substring(0, 8)}...
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-gray-900 relative p-6">
-      {/* Status Bar */}
-        <div className="bg-gray-800 bg-opacity-90 p-4 rounded-lg">
-          <div className="flex justify-between items-center max-w-7xl mx-auto">
-            <div>
-          <h2 className="text-white text-sm md:text-lg">Room: <span className="font-mono">{roomId}</span></h2>
-          <p className={`text-sm ${connected ? 'text-green-400' : 'text-yellow-400'}`}>
-            {connected ? `Connected as: ${userId.substring(0, 8)}...` : 'Connecting...'}
-          </p>
-            </div>
-            <div className="text-center text-white text-sm md:text-xl font-semibold">
-              Couple Call ❤️
-            </div>
-            <div className="text-white text-sm">
-          <span className="px-3 py-1">
-            {Object.keys(peers).length + 1}/2 Participants
-          </span>
-            </div>
-          </div>
-        </div>
+      <StatusBar
+        roomId={roomId}
+        userId={userId}
+        connected={connected}
+        peersCount={Object.keys(peers).length + 1}
+      />
 
-        {/* Video Grid */}
-        <div className="flex flex-col lg:flex-row gap-4 mb-6 mt-6 w-auto h-fit max-h-180">
-          {/* Local Video */}
-          <div className="w-full lg:w-1/2 h-auto ">
-            <div className="relative w-full h-full rounded-xl overflow-hidden">
-          <video
-            ref={localVideoRef}
-            autoPlay
-            muted
-            playsInline
-            className={`w-full h-full object-cover ${isVideoOff ? "opacity-0" : ""}`}
-          />
-          {isVideoOff && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-800">
-              <span className="text-white text-2xl font-bold">Camera Off</span>
-            </div>
-          )}
-          <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-base">
-            You {isMuted ? "(Muted)" : ""}
-          </div>
-            </div>
-          </div>
+      <VideoGrid
+        localVideoRef={localVideoRef}
+        isVideoOff={isVideoOff}
+        isMuted={isMuted}
+        peers={peers}
+        roomId={roomId}
+      />
 
-          {/* Remote Video */}
-          <div className="w-full lg:w-1/2 h-auto">
-            {Object.entries(peers).length > 0 ? (
-          Object.entries(peers).map(([peerId, stream]) => (
-            <div key={peerId} className="relative w-full h-full rounded-xl overflow-hidden">
-              <video
-            ref={(element) => {
-              if (element) element.srcObject = stream;
-            }}
-            autoPlay
-            playsInline
-            className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-base">
-            Peer: {peerId.substring(0, 8)}...
-              </div>
-            </div>
-          ))
-            ) : (
-          <div className="w-full h-full rounded-xl bg-gray-800 flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-gray-400 text-xl mb-4">Waiting for someone to join...</p>
-              <p className="text-gray-500 text-sm">Share the room ID to invite someone</p>
-              <p className="font-mono bg-gray-700 px-4 py-2 rounded mt-2 text-gray-300">{roomId}</p>
-            </div>
-          </div>
-            )}
-          </div>
-        </div>
-
-        {/* Controls - Now placed below videos */}
-      <div className="bg-gray-800 bg-opacity-90 p-4 rounded-lg">
-        <div className="flex items-center justify-center gap-3 md:gap-4 max-w-xl mx-auto">
-          <button
-            onClick={toggleMute}
-            className={`px-4 md:px-6 py-3 rounded-full ${
-              isMuted ? "bg-red-500" : "bg-blue-500"
-            } text-white font-medium hover:opacity-90 transition-opacity focus:outline-none shadow-lg flex items-center gap-2 text-sm md:text-base w-[110px] md:w-auto justify-center`}
-          >
-            {isMuted ? "Unmute Audio" : "Mute Audio"}
-          </button>
-
-          <button
-            onClick={toggleVideo}
-            className={`px-4 md:px-6 py-3 rounded-full ${
-              isVideoOff ? "bg-red-500" : "bg-blue-500"
-            } text-white font-medium hover:opacity-90 transition-opacity focus:outline-none shadow-lg flex items-center gap-2 text-sm md:text-base w-[110px] md:w-auto justify-center`}
-          >
-            {isVideoOff ? "Show Video" : "Hide Video"}
-          </button>
-
-          <button
-            onClick={leaveRoom}
-            className="px-4 md:px-6 py-3 rounded-full bg-red-600 text-white font-medium hover:bg-red-700 transition-colors focus:outline-none shadow-lg flex items-center gap-2 text-sm md:text-base w-[110px] md:w-auto justify-center"
-          >
-            Leave Call
-          </button>
-        </div>
-      </div>
+      <Controls
+        isMuted={isMuted}
+        isVideoOff={isVideoOff}
+        toggleMute={toggleMute}
+        toggleVideo={toggleVideo}
+        leaveRoom={leaveRoom}
+      />
 
       {notification && (
         <Notification
