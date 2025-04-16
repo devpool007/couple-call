@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import VideoRoom from './components/VideoRoom';
 import JoinRoom from './components/JoinRoom';
 import { Analytics } from "@vercel/analytics/react"
+import AdSense from 'react-adsense';
 
 function App() {
   const [roomId, setRoomId] = useState('');
@@ -57,6 +58,14 @@ function App() {
         ) : (
           <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
         )}
+      </div>
+      <div className="w-full max-w-7xl mx-auto px-4 py-6">
+        <AdSense.Google
+          client="pub-5177656256404656" // Replace with your AdSense publisher ID
+          style={{ display: 'block' }}
+          layout="in-article"
+          format="fluid"
+        />
       </div>
       <Analytics/>
     </div>
