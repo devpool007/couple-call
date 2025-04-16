@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import VideoRoom from './components/VideoRoom';
 import JoinRoom from './components/JoinRoom';
+import { Analytics } from "@vercel/analytics/react"
+import AdSense from 'react-adsense';
 
 function App() {
   const [roomId, setRoomId] = useState('');
@@ -50,15 +52,24 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="max-w-9/10 mx-auto px-4 pb-8">
         {!joined ? (
           <JoinRoom onJoin={handleJoinRoom} />
         ) : (
           <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
         )}
       </div>
+      <div className="w-full max-w-7xl mx-auto px-4 py-6">
+        <AdSense.Google
+          client="pub-5177656256404656" // Replace with your AdSense publisher ID
+          style={{ display: 'block' }}
+          layout="in-article"
+          format="fluid"
+        />
+      </div>
+      <Analytics/>
     </div>
   );
 }
 
-export default App;
+export default App;        
