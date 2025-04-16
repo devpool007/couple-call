@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import VideoRoom from './components/VideoRoom';
 import JoinRoom from './components/JoinRoom';
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [roomId, setRoomId] = useState('');
@@ -50,15 +51,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <div className="mx-auto px-4 py-6">
+      <div className="max-w-9/10 mx-auto px-4 pb-8">
         {!joined ? (
           <JoinRoom onJoin={handleJoinRoom} />
         ) : (
           <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
         )}
       </div>
+      <Analytics/>
     </div>
   );
 }
 
-export default App;
+export default App;        
