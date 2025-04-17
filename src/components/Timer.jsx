@@ -23,7 +23,7 @@ function Timer({ startTime }) {
   }, [startTime]);
 
   return (
-    <div className="text-green-400 font-mono text-sm md:text-base">
+    <div className="text-green-400 font-mono text-xs md:text-base">
       {duration}
     </div>
   );
