@@ -1,6 +1,10 @@
 import React from 'react';
+import Timer from './Timer';
 
 function StatusBar({ roomId, userId, connected, peersCount }) {
+  // Initialize startTime when the component mounts
+  const [startTime] = React.useState(new Date().getTime());
+
   return (
     <div className="bg-gray-800 bg-opacity-90 p-4 rounded-lg mb-4">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
@@ -10,11 +14,14 @@ function StatusBar({ roomId, userId, connected, peersCount }) {
             {connected ? `Connected as: ${userId.substring(0, 8)}...` : 'Connecting...'}
           </p>
         </div>
-        <div className="text-center text-white text-sm md:text-xl font-semibold">
-          Couple Call ❤️
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-center text-white text-sm md:text-xl font-semibold">
+            Couple Call ❤️
+          </div>
+          {connected && <Timer startTime={startTime} />}
         </div>
         <div className="text-white text-sm">
-          <span className="px-3 py-1 rounded-full">
+          <span className="px-3 py-1 bg-gray-700 rounded-full">
             {peersCount}/2 Participants
           </span>
         </div>
