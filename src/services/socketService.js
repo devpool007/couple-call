@@ -1,8 +1,10 @@
 import io from "socket.io-client";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+
 class SocketService {
   constructor(roomId, userId, callbacks) {
-    this.socket = io("https://couple-call-backend.onrender.com", {
+    this.socket = io(BACKEND_URL, {
       transports: ["websocket"],
       reconnection: true,
       secure: true,

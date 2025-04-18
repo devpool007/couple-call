@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import VideoRoom from './components/VideoRoom';
 import JoinRoom from './components/JoinRoom';
-import { Analytics } from "@vercel/analytics/react"
+import HowToUse from './components/HowToUse';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import Feedback from './components/Feedback';
+import Footer from './components/Footer';
+import NotFound from './components/NotFound';
+import { Analytics } from "@vercel/analytics/react";
 import AdSense from 'react-adsense';
 
 function App() {
@@ -50,26 +56,41 @@ function App() {
     setJoined(true);
   };
 
+  useEffect(() => {
+    if (!joined) {
+      // Scroll to the bottom of the page when on the Join Room page
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+    else {
+      window.scrollTo(0, 0);
+    }
+  }, [joined]);
+
   return (
-    <div className="min-h-screen bg-gray-900">
-      <div className="max-w-9/10 mx-auto px-4 pb-8">
-        {!joined ? (
-          <JoinRoom onJoin={handleJoinRoom} />
-        ) : (
-          <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
-        )}
+    <Router>
+      <div className="min-h-screen bg-gray-900 relative pb-20">
+        <div className="max-w-9/10 mx-auto px-4">
+          <Routes>
+            <Route path="/" element={
+              !joined ? (
+                <JoinRoom onJoin={handleJoinRoom} />
+              ) : (
+                <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
+              )
+            } />
+            <Route path="/how-to-use" element={<HowToUse />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/feedback" element={<Feedback />} />
+            <Route path="/404" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/404" replace />} />
+          </Routes>
+        </div>
+       
+        <Footer />
+        <Analytics />
       </div>
-      <div className="w-full max-w-7xl mx-auto px-4 py-6">
-        <AdSense.Google
-          client="pub-5177656256404656" // Replace with your AdSense publisher ID
-          style={{ display: 'block' }}
-          layout="in-article"
-          format="fluid"
-        />
-      </div>
-      <Analytics/>
-    </div>
+    </Router>
   );
 }
 
-export default App;        
+export default App;
