@@ -7,7 +7,16 @@ function JoinRoom({ onJoin }) {
     e.preventDefault();
     
     // Generate a random room ID if none is provided
-    const finalRoomId = roomId || `room-${Math.floor(Math.random() * 1000000)}`;
+    const generateSecureRoomId = () => {
+      const characters = '*!@/ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = 'room-';
+      for (let i = 0; i < 11; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return result;
+    };
+
+    const finalRoomId = roomId || generateSecureRoomId();
     onJoin(finalRoomId);
   };
 
