@@ -14,7 +14,7 @@ function Feedback() {
     setStatus('sending');
 
     try {
-      const response = await fetch('http://localhost:3000/api/feedback', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
