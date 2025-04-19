@@ -4,10 +4,10 @@ function VideoGrid({
   localVideoRef, 
   isVideoOff, 
   isMuted, 
-  peers, 
-  peerNames,
+  peers,
+  userNames,
   roomId,
-  userName 
+  userId
 }) {
   return (
     <div className="flex flex-col lg:flex-row gap-4 mb-10 mt-8">
@@ -29,7 +29,7 @@ function VideoGrid({
             </div>
           )}
           <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-base">
-            {userName} {isMuted ? "(Muted)" : ""}
+            {userNames[userId] || 'Anonymous'} {isMuted ? "(Muted)" : ""}
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ function VideoGrid({
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-base">
-                {peerNames[peerId] || 'Anonymous'}
+                {userNames[peerId] || 'Anonymous'}
               </div>
             </div>
           ))

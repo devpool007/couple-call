@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 class SocketService {
   constructor(roomId, userId, userName, callbacks) {
@@ -25,6 +25,7 @@ class SocketService {
   }
 
   joinRoom() {
+    // Include userName in join-room event
     this.socket.emit("join-room", this.roomId, this.userId, this.userName);
   }
 
@@ -51,6 +52,7 @@ class SocketService {
 
     // Room events with user names
     this.socket.on("existing-users", (existingUsers) => {
+      // existingUsers should now be an array of {userId, userName} objects
       this.callbacks.onExistingUsers?.(existingUsers);
     });
 

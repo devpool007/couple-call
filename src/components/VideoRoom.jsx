@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useUser } from '../context/UserContext';
 import StatusBar from './StatusBar';
 import VideoGrid from './VideoGrid';
 import Controls from './Controls';
 import SocketService from '../services/socketService';
 
 function VideoRoom({ roomId, userId, userName, peerConnection }) {
+  const { userNames, updateUserName } = useUser();
   const [peers, setPeers] = useState({});
-  const [peerNames, setPeerNames] = useState({});
   const [connected, setConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
@@ -17,6 +18,9 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
   const socketServiceRef = useRef(null);
 
   useEffect(() => {
+    // Add current user to context when component mounts
+    updateUserName(userId, userName);
+
     const socketCallbacks = {
       onError: (error) => {
         setNotification({
@@ -33,7 +37,7 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
       },
       onUserConnected: (newUserId, peerName) => {
         console.log("New user connected:", newUserId);
-        setPeerNames(prev => ({ ...prev, [newUserId]: peerName }));
+        updateUserName(newUserId, peerName);
         setNotification({
           message: `${peerName} joined the call`,
           type: "info"
@@ -41,15 +45,10 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
       },
       onUserDisconnected: (disconnectedUserId) => {
         handlePeerDisconnection(disconnectedUserId);
-        const peerName = peerNames[disconnectedUserId] || 'Peer';
+        const disconnectedName = userNames[disconnectedUserId] || 'Anonymous';
         setNotification({
-          message: `${peerName} left the call`,
+          message: `${disconnectedName} left the call`,
           type: "warning"
-        });
-        setPeerNames(prev => {
-          const newPeerNames = { ...prev };
-          delete newPeerNames[disconnectedUserId];
-          return newPeerNames;
         });
       },
       onRoomFull: (roomId) => {
@@ -135,7 +134,7 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
     return () => {
       cleanupResources();
     };
-  }, [roomId, userId, userName]);
+  }, [roomId, userId, userName, updateUserName]);
 
   useEffect(() => {
     if (peerConnection) {
@@ -332,9 +331,9 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
         isVideoOff={isVideoOff}
         isMuted={isMuted}
         peers={peers}
-        peerNames={peerNames}
+        userNames={userNames}
         roomId={roomId}
-        userName={userName}
+        userId={userId}
       />
 
       <Controls

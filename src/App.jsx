@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import NotFound from './components/NotFound';
 import { Analytics } from "@vercel/analytics/react";
 import AdSense from 'react-adsense';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   const [roomId, setRoomId] = useState('');
@@ -69,34 +70,36 @@ function App() {
   }, [joined]);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-900 relative pb-20">
-        <div className="max-w-9/10 mx-auto px-4">
-          <Routes>
-            <Route path="/" element={
-              !joined ? (
-                <JoinRoom onJoin={handleJoinRoom} />
-              ) : (
-                <VideoRoom 
-                  roomId={roomId} 
-                  userId={userId}
-                  userName={userName}
-                  peerConnection={peerConnection} 
-                />
-              )
-            } />
-            <Route path="/how-to-use" element={<HowToUse />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/feedback" element={<Feedback />} />
-            <Route path="/404" element={<NotFound />} />
-            <Route path="*" element={<Navigate to="/404" replace />} />
-          </Routes>
+    <UserProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-900 relative pb-20">
+          <div className="max-w-9/10 mx-auto px-4">
+            <Routes>
+              <Route path="/" element={
+                !joined ? (
+                  <JoinRoom onJoin={handleJoinRoom} />
+                ) : (
+                  <VideoRoom 
+                    roomId={roomId} 
+                    userId={userId}
+                    userName={userName}
+                    peerConnection={peerConnection} 
+                  />
+                )
+              } />
+              <Route path="/how-to-use" element={<HowToUse />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/404" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/404" replace />} />
+            </Routes>
+          </div>
+        
+          <Footer />
+          <Analytics />
         </div>
-       
-        <Footer />
-        <Analytics />
-      </div>
-    </Router>
+      </Router>
+    </UserProvider>
   );
 }
 
