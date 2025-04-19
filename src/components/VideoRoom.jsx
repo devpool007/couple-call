@@ -1,26 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useUser } from '../context/UserContext';
 import StatusBar from './StatusBar';
 import VideoGrid from './VideoGrid';
 import Controls from './Controls';
 import SocketService from '../services/socketService';
 
 function VideoRoom({ roomId, userId, userName, peerConnection }) {
-  const { userNames, updateUserName } = useUser();
   const [peers, setPeers] = useState({});
   const [connected, setConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [userNamesVersion, setUserNamesVersion] = useState(0); // Add this line
   const localVideoRef = useRef(null);
   const localStreamRef = useRef(null);
   const peerConnectionsRef = useRef({});
   const socketServiceRef = useRef(null);
+  const userNamesRef = useRef({ [userId]: userName });
+
+  const updateUserNames = (userId, name) => {
+    userNamesRef.current[userId] = name;
+    setUserNamesVersion(v => v + 1); // Trigger rerender
+  };
 
   useEffect(() => {
-    // Add current user to context when component mounts
-    updateUserName(userId, userName);
-
     const socketCallbacks = {
       onError: (error) => {
         setNotification({
@@ -30,14 +32,15 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
       },
       onExistingUsers: (existingUsers) => {
         console.log("Existing users in room:", existingUsers);
-        existingUsers.forEach((existingUserId) => {
+        existingUsers.forEach(({userId: existingUserId, userName: existingUserName}) => {
+          userNamesRef.current[existingUserId] = existingUserName;
           createPeerConnection(existingUserId);
           sendOffer(existingUserId);
         });
       },
       onUserConnected: (newUserId, peerName) => {
         console.log("New user connected:", newUserId);
-        updateUserName(newUserId, peerName);
+        updateUserNames(newUserId, peerName);
         setNotification({
           message: `${peerName} joined the call`,
           type: "info"
@@ -45,7 +48,9 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
       },
       onUserDisconnected: (disconnectedUserId) => {
         handlePeerDisconnection(disconnectedUserId);
-        const disconnectedName = userNames[disconnectedUserId] || 'Anonymous';
+        const disconnectedName = userNamesRef.current[disconnectedUserId] || 'Anonymous';
+        delete userNamesRef.current[disconnectedUserId];
+        setUserNamesVersion(v => v + 1); // Trigger rerender
         setNotification({
           message: `${disconnectedName} left the call`,
           type: "warning"
@@ -134,7 +139,7 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
     return () => {
       cleanupResources();
     };
-  }, [roomId, userId, userName, updateUserName]);
+  }, [roomId, userId, userName]);
 
   useEffect(() => {
     if (peerConnection) {
@@ -331,7 +336,7 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
         isVideoOff={isVideoOff}
         isMuted={isMuted}
         peers={peers}
-        userNames={userNames}
+        userNames={userNamesRef.current}
         roomId={roomId}
         userId={userId}
       />

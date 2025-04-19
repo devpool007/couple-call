@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 class SocketService {
   constructor(roomId, userId, userName, callbacks) {
@@ -25,8 +25,11 @@ class SocketService {
   }
 
   joinRoom() {
-    // Include userName in join-room event
-    this.socket.emit("join-room", this.roomId, this.userId, this.userName);
+    this.socket.emit("join-room", {
+      roomId: this.roomId,
+      userId: this.userId,
+      userName: this.userName
+    });
   }
 
   setupSocketListeners() {
@@ -50,18 +53,16 @@ class SocketService {
       this.callbacks.onError?.(error);
     });
 
-    // Room events with user names
-    this.socket.on("existing-users", (existingUsers) => {
-      // existingUsers should now be an array of {userId, userName} objects
-      this.callbacks.onExistingUsers?.(existingUsers);
+    this.socket.on("existing-users", (users) => {
+      this.callbacks.onExistingUsers?.(users);
     });
 
-    this.socket.on("user-connected", (newUserId, userName) => {
-      this.callbacks.onUserConnected?.(newUserId, userName);
+    this.socket.on("user-connected", (data) => {
+      this.callbacks.onUserConnected?.(data.userId, data.userName);
     });
 
-    this.socket.on("user-disconnected", (disconnectedUserId) => {
-      this.callbacks.onUserDisconnected?.(disconnectedUserId);
+    this.socket.on("user-disconnected", (userId) => {
+      this.callbacks.onUserDisconnected?.(userId);
     });
 
     this.socket.on("room-full", (roomId) => {
@@ -82,7 +83,6 @@ class SocketService {
     });
   }
 
-  // Signaling methods
   sendOffer(offer, peerId) {
     this.socket.emit("offer", offer, this.roomId, peerId);
   }
