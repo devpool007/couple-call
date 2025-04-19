@@ -14,6 +14,7 @@ function App() {
   const [roomId, setRoomId] = useState('');
   const [joined, setJoined] = useState(false);
   const [userId] = useState(`user-${Math.floor(Math.random() * 1000000)}`);
+  const [userName, setUserName] = useState('');
   const [peerConnection, setPeerConnection] = useState(null);
 
   const iceConfig = {
@@ -51,8 +52,9 @@ function App() {
     }
   }, [joined]);
 
-  const handleJoinRoom = (roomId) => {
+  const handleJoinRoom = (roomId, name) => {
     setRoomId(roomId);
+    setUserName(name);
     setJoined(true);
   };
 
@@ -75,7 +77,12 @@ function App() {
               !joined ? (
                 <JoinRoom onJoin={handleJoinRoom} />
               ) : (
-                <VideoRoom roomId={roomId} userId={userId} peerConnection={peerConnection} />
+                <VideoRoom 
+                  roomId={roomId} 
+                  userId={userId}
+                  userName={userName}
+                  peerConnection={peerConnection} 
+                />
               )
             } />
             <Route path="/how-to-use" element={<HowToUse />} />

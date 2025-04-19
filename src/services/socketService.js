@@ -1,10 +1,9 @@
 import io from "socket.io-client";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-// const BACKEND_URL = 'http://localhost:3000';
 
 class SocketService {
-  constructor(roomId, userId, callbacks) {
+  constructor(roomId, userId, userName, callbacks) {
     this.socket = io(BACKEND_URL, {
       transports: ["websocket"],
       reconnection: true,
@@ -16,6 +15,7 @@ class SocketService {
     
     this.roomId = roomId;
     this.userId = userId;
+    this.userName = userName;
     this.callbacks = callbacks;
   }
 
@@ -25,7 +25,7 @@ class SocketService {
   }
 
   joinRoom() {
-    this.socket.emit("join-room", this.roomId, this.userId);
+    this.socket.emit("join-room", this.roomId, this.userId, this.userName);
   }
 
   setupSocketListeners() {
@@ -49,13 +49,13 @@ class SocketService {
       this.callbacks.onError?.(error);
     });
 
-    // Room events
+    // Room events with user names
     this.socket.on("existing-users", (existingUsers) => {
       this.callbacks.onExistingUsers?.(existingUsers);
     });
 
-    this.socket.on("user-connected", (newUserId) => {
-      this.callbacks.onUserConnected?.(newUserId);
+    this.socket.on("user-connected", (newUserId, userName) => {
+      this.callbacks.onUserConnected?.(newUserId, userName);
     });
 
     this.socket.on("user-disconnected", (disconnectedUserId) => {

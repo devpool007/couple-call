@@ -1,6 +1,14 @@
 import React from "react";
 
-function VideoGrid({ localVideoRef, isVideoOff, isMuted, peers, roomId }) {
+function VideoGrid({ 
+  localVideoRef, 
+  isVideoOff, 
+  isMuted, 
+  peers, 
+  peerNames,
+  roomId,
+  userName 
+}) {
   return (
     <div className="flex flex-col lg:flex-row gap-4 mb-10 mt-8">
       {/* Local Video */}
@@ -21,7 +29,7 @@ function VideoGrid({ localVideoRef, isVideoOff, isMuted, peers, roomId }) {
             </div>
           )}
           <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-base">
-            You {isMuted ? "(Muted)" : ""}
+            {userName} {isMuted ? "(Muted)" : ""}
           </div>
         </div>
       </div>
@@ -43,7 +51,7 @@ function VideoGrid({ localVideoRef, isVideoOff, isMuted, peers, roomId }) {
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-4 left-4 bg-black bg-opacity-60 text-white px-4 py-2 rounded-lg text-base">
-                Peer: {peerId.substring(0, 8)}...
+                {peerNames[peerId] || 'Anonymous'}
               </div>
             </div>
           ))

@@ -4,8 +4,9 @@ import VideoGrid from './VideoGrid';
 import Controls from './Controls';
 import SocketService from '../services/socketService';
 
-function VideoRoom({ roomId, userId, peerConnection }) {
+function VideoRoom({ roomId, userId, userName, peerConnection }) {
   const [peers, setPeers] = useState({});
+  const [peerNames, setPeerNames] = useState({});
   const [connected, setConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
@@ -30,18 +31,25 @@ function VideoRoom({ roomId, userId, peerConnection }) {
           sendOffer(existingUserId);
         });
       },
-      onUserConnected: (newUserId) => {
+      onUserConnected: (newUserId, peerName) => {
         console.log("New user connected:", newUserId);
+        setPeerNames(prev => ({ ...prev, [newUserId]: peerName }));
         setNotification({
-          message: `New user joined: ${newUserId.substring(0, 8)}...`,
+          message: `${peerName} joined the call`,
           type: "info"
         });
       },
       onUserDisconnected: (disconnectedUserId) => {
         handlePeerDisconnection(disconnectedUserId);
+        const peerName = peerNames[disconnectedUserId] || 'Peer';
         setNotification({
-          message: `User left: ${disconnectedUserId.substring(0, 8)}...`,
+          message: `${peerName} left the call`,
           type: "warning"
+        });
+        setPeerNames(prev => {
+          const newPeerNames = { ...prev };
+          delete newPeerNames[disconnectedUserId];
+          return newPeerNames;
         });
       },
       onRoomFull: (roomId) => {
@@ -96,7 +104,7 @@ function VideoRoom({ roomId, userId, peerConnection }) {
     };
 
     // Initialize socket service
-    socketServiceRef.current = new SocketService(roomId, userId, socketCallbacks);
+    socketServiceRef.current = new SocketService(roomId, userId, userName, socketCallbacks);
 
     // Get local media stream
     navigator.mediaDevices
@@ -127,7 +135,7 @@ function VideoRoom({ roomId, userId, peerConnection }) {
     return () => {
       cleanupResources();
     };
-  }, [roomId, userId]);
+  }, [roomId, userId, userName]);
 
   useEffect(() => {
     if (peerConnection) {
@@ -324,7 +332,9 @@ function VideoRoom({ roomId, userId, peerConnection }) {
         isVideoOff={isVideoOff}
         isMuted={isMuted}
         peers={peers}
+        peerNames={peerNames}
         roomId={roomId}
+        userName={userName}
       />
 
       <Controls
