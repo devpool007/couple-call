@@ -25,10 +25,18 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
         });
       },
       onExistingUsers: (existingUsers) => {
-        console.log("Existing users in room:", existingUsers);
-        existingUsers.forEach((existingUserId) => {
-          createPeerConnection(existingUserId);
-          sendOffer(existingUserId);
+        // console.log("Existing users in room:", existingUsers);
+        // existingUsers.forEach((existingUserId) => {
+        //   createPeerConnection(existingUserId);
+        //   sendOffer(existingUserId);
+        // });
+
+        existingUsers.forEach(user => {
+          console.log(`User ${user.userName} (${user.userId}) is in the room`);
+          // Update your state/UI with the username information
+          createPeerConnection(user.userId);
+          sendOffer(user.userId);
+          setPeerNames(prev => ({ ...prev, [user.userId]: user.userName }));
         });
       },
       onUserConnected: (newUserId, peerName) => {
