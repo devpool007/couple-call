@@ -22,6 +22,8 @@ function HowToUse() {
               <li>Enter a specific room ID if you're joining someone</li>
               <li>Leave it blank for a random room ID if you're creating a new call</li>
               <li>Click "Join Room" to enter the video call</li>
+              <li>Allow camera and microphone access when prompted</li>
+              <li>Tip: You can click on the Room ID to copy it to your clipboard easily! :D</li>
             </ul>
           </section>
 
