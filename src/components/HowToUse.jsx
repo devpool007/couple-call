@@ -22,14 +22,13 @@ function HowToUse() {
               <li>Enter a specific room ID if you're joining someone</li>
               <li>Leave it blank for a random room ID if you're creating a new call</li>
               <li>Click "Join Room" to enter the video call</li>
-              <li>Allow camera and microphone access when prompted</li>
-              <li>Tip: You can click on the Room ID to copy it to your clipboard easily! :D</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">3. During the Call</h2>
             <ul className="list-disc list-inside text-gray-300 space-y-2">
+              <li>Allow camera and microphone access when prompted</li>
               <li>Use the mute button to toggle your microphone</li>
               <li>Use the camera button to toggle your video</li>
               <li>Click "Leave Call" to end the session</li>
@@ -44,6 +43,7 @@ function HowToUse() {
               Share the room ID displayed at the top of your screen with the person you want to call.
               They can enter this ID on their device to join your room.
             </p>
+            <p className="text-gray-200 font-bold ">Tip: You can click on the Room ID to copy it to your clipboard easily! :D</p>
           </section>
 
           <section>
