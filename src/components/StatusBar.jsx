@@ -11,7 +11,7 @@ function StatusBar({ roomId, userId, connected, peersCount }) {
         <div>
           <h2 className="text-white text-xs md:text-lg">Room: <span className="font-mono">{roomId}</span></h2>
           <p className={`text-xs ${connected ? 'text-green-400' : 'text-yellow-400'}`}>
-            {connected ? `Connected as: ${userId.substring(0, 8)}...` : 'Connecting...'}
+            {connected ? 'Connected' : 'Connecting...'}
           </p>
         </div>
         <div className="flex flex-col items-center gap-2">
