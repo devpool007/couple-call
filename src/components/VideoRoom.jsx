@@ -49,7 +49,16 @@ function VideoRoom({ roomId, userId, userName, peerConnection }) {
       },
       onUserDisconnected: (disconnectedUserId) => {
         handlePeerDisconnection(disconnectedUserId);
-        const peerName = peerNames[disconnectedUserId] || 'Peer';
+        setPeerNames((prevPeerNames) => {
+          const peerName = prevPeerNames[disconnectedUserId] || 'Peer';
+          setNotification({
+            message: `${peerName} left the call`,
+            type: "warning"
+          });
+          const newPeerNames = { ...prevPeerNames };
+          delete newPeerNames[disconnectedUserId];
+          return newPeerNames;
+        });
         setNotification({
           message: `${peerName} left the call`,
           type: "warning"
