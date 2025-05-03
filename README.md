@@ -15,3 +15,6 @@ This app is a lightweight video call app made for simple and fast communication 
 
 A private, peer-to-peer video calling web app using React (with Vite and Tailwind CSS) for the frontend and Node.js with Express and Socket.io for the backend. The app allows two users to connect in a secure video call room using WebRTC, with signaling handled via WebSocket communication. I deployed the frontend on Vercel and the backend on Render, resolving common deployment issues such as CORS and proxy trust settings. To enhance the app, I added a feedback form connected to a Supabase PostgreSQL database, allowing users to submit messages securely. Throughout the process, I ensured the app was limited to two users per room, considered potential security concerns, and implemented basic rate limiting for protection. The result is a clean, functional, and scalable video calling solution built entirely from scratch and designed for privacy and simplicity.
 
+
+The backend is built in NodeJS and hosted on render, it's a free hosting service hence might not be active all the time, sometimes hitting the backend url helps activate it :) 
+
