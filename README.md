@@ -40,11 +40,11 @@ To run and develop the project locally, you’ll need to **fork and clone both r
 2. **Clone your forks**
    ```bash
    # Frontend
-   git clone https://github.com/your-username/couple-call-frontend.git
-   cd couple-call-frontend
+   git clone https://github.com/devpool007/couple-call.git
+   cd couple-call
 
    # In a separate terminal or folder
-   git clone https://github.com/your-username/couple-call-backend.git
+   git clone https://github.com/devpool007/couple-call-backend.git
    cd couple-call-backend
 
 3. **Create a new branch in each repo**
